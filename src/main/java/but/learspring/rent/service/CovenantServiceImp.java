@@ -36,13 +36,14 @@ public class CovenantServiceImp implements  CovenantService{
     @Override
     public Covenant saveCovenant(Covenant covenant){
         log.info("saving covenant {}");
+        repo.save(covenant);
         Payment paymentReq = new Payment();
         paymentReq.setCovenantId(covenant.getCovenantId());
         paymentReq.setAmount(covenant.getCost());
         Payment paymentRes =
-                restTemplate.postForObject("http://localhost:3002/payment/doPay/",
+                restTemplate.postForObject("http://localhost:3002/api/payment/doPay",
                         paymentReq, Payment.class);
-        return repo.save(covenant);
+        return covenant;
     }
 
     @Override
@@ -85,7 +86,7 @@ public class CovenantServiceImp implements  CovenantService{
                     .getForObject("http://localhost:8081/department/"+covenant.getDepartmentId(), Department.class);
 
             Payment payment = restTemplate.
-                    getForObject("http://localhost:3002/api/payment/" +covenant.getPaymentId(), Payment.class);
+                    getForObject("http://localhost:3002/api/payment/" +covenant.getCovenantId(), Payment.class);
 
             rt.setCovenant(covenant);
             rt.setDepartment(department);
