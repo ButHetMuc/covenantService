@@ -9,9 +9,11 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Payment {
-    private Long id;
-    private Long covenantId;
-    private Instant paymentDate;
+    private Long paymentId;
     private String paymentStatus;
-    private long amount;
+    private String paymentMode;
+    private Long amount;
+    private Instant paymentDate;
+    private Long covenantId;
+
 }

@@ -21,7 +21,6 @@ public class Covenant {
     private Long covenantId;
     private Long userId;
     private Long departmentId;
-    private Long paymentId;
     private String fromDate;
     private String toDate;
     private long cost;

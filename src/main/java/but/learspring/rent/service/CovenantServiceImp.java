@@ -21,29 +21,22 @@ import java.util.List;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor @Transactional
-public class CovenantServiceImp implements  CovenantService{
+@RequiredArgsConstructor
+@Transactional
+public class CovenantServiceImp implements CovenantService {
 
     @Autowired
-    private  CovenantRepo repo;
+    private CovenantRepo repo;
 
     @Autowired
-    private  RestTemplate restTemplate;
-
+    private RestTemplate restTemplate;
 
 
     //save covenant
     @Override
-    public Covenant saveCovenant(Covenant covenant){
+    public Covenant saveCovenant(Covenant covenant) {
         log.info("saving covenant {}");
-        repo.save(covenant);
-        Payment paymentReq = new Payment();
-        paymentReq.setCovenantId(covenant.getCovenantId());
-        paymentReq.setAmount(covenant.getCost());
-        Payment paymentRes =
-                restTemplate.postForObject("http://localhost:3002/api/payment/doPay",
-                        paymentReq, Payment.class);
-        return covenant;
+        return  repo.save(covenant);
     }
 
     @Override
@@ -59,11 +52,11 @@ public class CovenantServiceImp implements  CovenantService{
 
     @Override
     public boolean deleteCovenant(Long covenantId) {
-        try{
+        try {
             repo.deleteById(covenantId);
-            log.info("deleted covenant: "+covenantId);
+            log.info("deleted covenant: " + covenantId);
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             log.info("oops! something go wrong");
             e.printStackTrace();
             return false;
@@ -71,22 +64,22 @@ public class CovenantServiceImp implements  CovenantService{
     }
 
     //get covenant with user and department
-    public ResponseTemplate getCovenantUserDepartment(Long covenantId){
+    public ResponseTemplate getCovenantUserDepartment(Long covenantId) {
         log.info("fetching covenant with user and department details");
-        try{
+        try {
             ResponseTemplate rt = new ResponseTemplate();
             Covenant covenant = repo.findByCovenantId(covenantId);
             System.out.println(covenant.toString());
 
             Users user = restTemplate
-                    .getForObject("http://localhost:9000/user/" +covenant.getUserId(),Users.class);
+                    .getForObject("http://localhost:9000/user/" + covenant.getUserId(), Users.class);
             System.out.println(user.toString());
 
             Department department = restTemplate
-                    .getForObject("http://localhost:8081/department/"+covenant.getDepartmentId(), Department.class);
+                    .getForObject("http://localhost:8081/department/" + covenant.getDepartmentId(), Department.class);
 
             Payment payment = restTemplate.
-                    getForObject("http://localhost:3002/api/payment/" +covenant.getCovenantId(), Payment.class);
+                    getForObject("http://localhost:3002/api/payment/" + covenant.getCovenantId(), Payment.class);
 
             rt.setCovenant(covenant);
             rt.setDepartment(department);
@@ -94,7 +87,7 @@ public class CovenantServiceImp implements  CovenantService{
             rt.setPayment(payment);
 
             return rt;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }

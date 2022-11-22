@@ -54,6 +54,10 @@ public class CovenantController {
         }
 
     }
+    @GetMapping("/byId/{covenantId}")
+    public Covenant getCovenantById(@PathVariable Long covenantId){
+        return service.getCovenantById(covenantId);
+    }
 
     @DeleteMapping("/{covenantId}")
     public ResponseEntity<String> deleteCovenant(@PathVariable Long covenantId) {
