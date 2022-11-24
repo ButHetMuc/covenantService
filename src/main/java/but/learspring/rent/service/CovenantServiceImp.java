@@ -21,14 +21,15 @@ import java.util.List;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor @Transactional
-public class CovenantServiceImp implements  CovenantService{
+@RequiredArgsConstructor
+@Transactional
+public class CovenantServiceImp implements CovenantService {
 
     @Autowired
-    private  CovenantRepo repo;
+    private CovenantRepo repo;
 
     @Autowired
-    private  RestTemplate restTemplate;
+    private RestTemplate restTemplate;
 
 
 
@@ -36,13 +37,7 @@ public class CovenantServiceImp implements  CovenantService{
     @Override
     public Covenant saveCovenant(Covenant covenant){
         log.info("saving covenant {}");
-//        Payment paymentReq = new Payment();
-//        paymentReq.setCovenantId(covenant.getCovenantId());
-//        paymentReq.setAmount(covenant.getCost());
-//        Payment paymentRes =
-//                restTemplate.postForObject("http://localhost:3002/payment/doPay/",
-//                        paymentReq, Payment.class);
-        return repo.save(covenant);
+        return  repo.save(covenant);
     }
 
     @Override
@@ -77,21 +72,20 @@ public class CovenantServiceImp implements  CovenantService{
             Covenant covenant = repo.findByCovenantId(covenantId);
             System.out.println(covenant.toString());
 
-//            Users user = restTemplate
-//                    .getForObject("http://localhost:9000/user/" +covenant.getUserId(),Users.class);
-//            System.out.println(user.toString());
+            Users user = restTemplate
+                    .getForObject("http://localhost:9000/user/" + covenant.getUserId(), Users.class);
+            System.out.println(user.toString());
 
             Department department = restTemplate
-                    .getForObject("http://localhost:3000/api/product/"+covenant.get_id(), Department.class);
-            System.out.println(department);
+                    .getForObject("http://localhost:8081/department/" + covenant.get_id(), Department.class);
 
-//            Payment payment = restTemplate.
-//                    getForObject("http://localhost:3002/api/payment/" +covenant.getPaymentId(), Payment.class);
+            Payment payment = restTemplate.
+                    getForObject("http://localhost:3002/api/payment/" + covenant.getCovenantId(), Payment.class);
 
             rt.setCovenant(covenant);
             rt.setDepartment(department);
-//            rt.setUser(user);
-//            rt.setPayment(payment);
+            rt.setUser(user);
+            rt.setPayment(payment);
 
             return rt;
         }catch (Exception e){

@@ -5,16 +5,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Payment {
     private Long paymentId;
-    private Long covenantId;
-    private String paymentMode;
-    private String referenceNumber;
-    private Instant paymentDate;
     private String paymentStatus;
-    private long amount;
+    private String paymentMode;
+    private Long amount;
+    private Instant paymentDate;
+    private Long covenantId;
+
 }

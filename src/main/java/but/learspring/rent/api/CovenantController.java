@@ -1,6 +1,7 @@
 package but.learspring.rent.api;
 
 import but.learspring.rent.model.Covenant;
+import but.learspring.rent.service.CovenantService;
 import but.learspring.rent.service.CovenantServiceImp;
 import but.learspring.rent.template.ResponseTemplate;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
@@ -20,55 +21,61 @@ import java.util.List;
 @RequestMapping("/api/covenant")
 public class CovenantController {
     @Autowired
-    private CovenantServiceImp service;
+    private CovenantService service;
 
     private static final String RENT_SERVICE = "rentService";
 
-    int count =1;
+    int count = 1;
 
     @PostMapping("/")
-    public Covenant addUser(@RequestBody Covenant covenant){
+    public Covenant addCovenant(@RequestBody Covenant covenant) {
         return service.saveCovenant(covenant);
     }
 
-//    @CircuitBreaker(name = RENT_SERVICE , fallbackMethod = "fallback")
+    //    @CircuitBreaker(name = RENT_SERVICE , fallbackMethod = "fallback")
 //    @Retry(name = RENT_SERVICE)
 //    @TimeLimiter(name = RENT_SERVICE)
     @GetMapping("/")
-    public ResponseEntity<List<Covenant>> getCovenants(){
+    public ResponseEntity<List<Covenant>> getCovenants() {
         return ResponseEntity.status(HttpStatus.OK).body(service.getAllCovenants());
     }
 
-//    @CircuitBreaker(name = RENT_SERVICE , fallbackMethod = "fallback")
+    //    @CircuitBreaker(name = RENT_SERVICE , fallbackMethod = "fallback")
     @Retry(name = RENT_SERVICE)
 //    @TimeLimiter(name = RENT_SERVICE)
 
     @GetMapping("/{covenantId}")
-    public ResponseEntity<ResponseTemplate> getCovenantWithUserDepartment(@PathVariable Long covenantId){
-        log.info("retry method called" + count++ +" time at " + new Date());
+    public ResponseEntity<ResponseTemplate> getCovenantWithUserDepartment(@PathVariable Long covenantId) {
+        log.info("retry method called" + count++ + " time at " + new Date());
         ResponseTemplate r = service.getCovenantUserDepartment(covenantId);
-        if (r == null){
+        if (r == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
-        }else {
-            return  ResponseEntity.status(HttpStatus.OK).body(r);
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(r);
         }
 
     }
+    @GetMapping("/byId/{covenantId}")
+    public Covenant getCovenantById(@PathVariable Long covenantId){
+        return service.getCovenantById(covenantId);
+    }
+
     @DeleteMapping("/{covenantId}")
-    public ResponseEntity<String> deleteCovenant(@PathVariable Long covenantId){
-        log.info("deleting covenant:"  + covenantId);
+    public ResponseEntity<String> deleteCovenant(@PathVariable Long covenantId) {
+        log.info("deleting covenant:" + covenantId);
         service.deleteCovenant(covenantId);
         return ResponseEntity.status(HttpStatus.OK).body("deleted successful");
     }
 
-    public String fallback (){
+    public String fallback() {
         return "something go wrong";
     }
 
-    public String retryFallback(){
+    public String retryFallback() {
         return "this is retry fallback";
     }
-    public String timeLimiterFallback(){
+
+    public String timeLimiterFallback() {
         return "this is time limiter fallback";
     }
 
