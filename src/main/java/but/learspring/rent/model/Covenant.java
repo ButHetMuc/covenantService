@@ -20,7 +20,7 @@ public class Covenant {
     @GeneratedValue(strategy = AUTO)
     private Long covenantId;
     private Long userId;
-    private Long departmentId;
+    private String _id;//departmentId
     private Long paymentId;
     private String fromDate;
     private String toDate;

@@ -42,6 +42,7 @@ public class CovenantController {
 //    @CircuitBreaker(name = RENT_SERVICE , fallbackMethod = "fallback")
     @Retry(name = RENT_SERVICE)
 //    @TimeLimiter(name = RENT_SERVICE)
+
     @GetMapping("/{covenantId}")
     public ResponseEntity<ResponseTemplate> getCovenantWithUserDepartment(@PathVariable Long covenantId){
         log.info("retry method called" + count++ +" time at " + new Date());
