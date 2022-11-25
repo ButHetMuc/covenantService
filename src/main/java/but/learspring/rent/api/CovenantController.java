@@ -34,7 +34,7 @@ public class CovenantController {
     private CovenantService service;
 
     private static final String RENT_SERVICE = "rentService";
-    @Value("service.user.url")
+    @Value("${service.user.url}")
     private String userServiceUrl;
 
     @PostMapping("/")
@@ -116,7 +116,6 @@ public class CovenantController {
             com.squareup.okhttp.RequestBody body = com.squareup.okhttp.RequestBody.create(mediaType, "");
             Request request = new Request.Builder()
                     .url( userServiceUrl+"/api/user/info/")
-
                     .get()
                     .addHeader("Authorization", "Bearer " + token)
                     .build();

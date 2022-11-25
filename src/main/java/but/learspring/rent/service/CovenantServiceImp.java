@@ -37,10 +37,10 @@ public class CovenantServiceImp implements CovenantService {
     private RestTemplate restTemplate;
     private Gson gson = new Gson();
     private JsonObject jsonObject;
-    @Value("service.department.url")
+    @Value("${service.department.url}")
     private String departmentServiceUrl;
 
-    @Value("service.user.url")
+    @Value("${service.user.url}")
     private String userServiceUrl;
 
 
