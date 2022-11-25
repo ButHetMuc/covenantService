@@ -6,12 +6,17 @@ import but.learspring.rent.template.Department;
 import but.learspring.rent.template.Payment;
 import but.learspring.rent.template.ResponseTemplate;
 import but.learspring.rent.template.Users;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -30,7 +35,13 @@ public class CovenantServiceImp implements CovenantService {
 
     @Autowired
     private RestTemplate restTemplate;
+    private Gson gson = new Gson();
+    private JsonObject jsonObject;
+    @Value("service.department.url")
+    private String departmentServiceUrl;
 
+    @Value("service.user.url")
+    private String userServiceUrl;
 
 
     //save covenant
@@ -72,20 +83,28 @@ public class CovenantServiceImp implements CovenantService {
             Covenant covenant = repo.findByCovenantId(covenantId);
             System.out.println(covenant.toString());
 
-            Users user = restTemplate
-                    .getForObject("http://localhost:9000/user/" + covenant.getUserId(), Users.class);
-            System.out.println(user.toString());
+            String u = restTemplate
+                    .getForObject(userServiceUrl+"/api/user/" + covenant.getUserId(), String.class);
+            System.out.println(u);
+            jsonObject = gson.fromJson(u,JsonObject.class);
+            String us = jsonObject.get("data").toString();
+            Users user = gson.fromJson(us,Users.class);
+            System.out.println(user);
 
-            Department department = restTemplate
-                    .getForObject("http://localhost:8081/department/" + covenant.get_id(), Department.class);
+            String d = restTemplate
+                    .getForObject(departmentServiceUrl+"/api/product/" + covenant.get_id(), String.class);
+//            System.out.println(d);
 
-            Payment payment = restTemplate.
-                    getForObject("http://localhost:3002/api/payment/" + covenant.getCovenantId(), Payment.class);
+            jsonObject = gson.fromJson(d, JsonObject.class);
+            String depart = jsonObject.get("home").toString();
+//            System.out.println(depart);
+            Department department = gson.fromJson(depart, Department.class);
+            System.out.println(department);
 
             rt.setCovenant(covenant);
             rt.setDepartment(department);
             rt.setUser(user);
-            rt.setPayment(payment);
+
 
             return rt;
         }catch (Exception e){

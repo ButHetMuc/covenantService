@@ -11,13 +11,13 @@ import java.util.ArrayList;
 @AllArgsConstructor
 public class Department {
     private String _id;
-    private int creatorId;
+    private long creatorId;
     private String name;
     private Address address;
-    private long price;
+    private double price;
     private String description;
-    private int area;
-    private ArrayList<String> image;
+    private double area;
+    private ArrayList<String> image = new ArrayList<>();
     private String deleteAt;
     private boolean deleted;
     private boolean isSold;

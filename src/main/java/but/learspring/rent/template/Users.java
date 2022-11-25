@@ -8,14 +8,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Users {
-    private Long userId;
+    private Long id;
+    private String lastLogin;
     private String username;
-    private String password;
-    private String firstName;
-    private String lastName;
+    private String first_name;
+    private String last_name;
+    private boolean is_active;
+    private String date_joined;
     private String email;
     private String phone;
-    private String dateOfBirth;
+    private String date_of_birth;
     private String gender;
-    private Long departmentId;
 }

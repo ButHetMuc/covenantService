@@ -12,5 +12,4 @@ public class ResponseTemplate {
     private Covenant covenant;
     private Department department;
     private Users user;
-    private Payment payment;
 }
